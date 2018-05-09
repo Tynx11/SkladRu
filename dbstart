@@ -1,0 +1,1 @@
+INSERT INTO public.users (user_id, email, enabled, password, role, username) VALUES (1, 'admin@gmail.com', true, '$2a$10$5YwtWZQarKSX8y1AxbObj.u2DjT1SPCak7IvjWqsb/Dh51V0McaeS', 'ROLE_ADMIN', 'admin');

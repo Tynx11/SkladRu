@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Warehouse</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}"/>
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<form class="form-narrow form-horizontal" method="post" th:action="@{/admin/warehouse/add}" th:object="${warehouseForm}" th:fragment="warehouseForm">
+    <th:block th:if="${#fields.hasErrors('${warehouseForm.*}')}">
+        <div th:replace="fragments/components :: alert (type='danger', message='Form contains errors. Please try again.')">Alert</div>
+    </th:block>
+    <fieldset>
+        <legend>Создать Склады</legend>
+        <div class="form-group" th:classappend="${#fields.hasErrors('city')}? 'has-error'">
+            <label for="city" class="col-lg-2 control-label">Город</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="city" placeholder="Введи город" th:field="*{city}" />
+                <span class="help-block" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">Город невалидный</span>
+            </div>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('address')}? 'has-error'">
+            <label for="address" class="col-lg-2 control-label">Адрес</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="address" placeholder="Введи адрес" th:field="*{address}" />
+                <span class="help-block" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Почта невалидная</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-warning">Добавить</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+</body>
+</html>

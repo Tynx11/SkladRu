@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список товаров</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/base.css" rel="stylesheet" media="screen" th:href="@{/resources/css/base.css}"/>
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="row">
+        <h2 class="text-center" th:text="Товары">Товары</h2>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <form action="/product">
+                <fieldset>
+                    <legend>Сортировка</legend>
+                    <div class="form-group">
+                        <label for="name">Название</label>
+                        <input type="search" class="form-control" id="name" name="name" placeholder="Найти">
+                    </div>
+                    <div class="form-group">
+                        <label for="cat">Категория</label>
+                        <select class="form-control" id="cat" th:name="cat">
+                            <option value="">Выберите категорию</option>
+                            <option th:each="category : ${allCategories}" th:selected="${category.id.equals(selectedCategory)}" th:value="${category.id}"
+                                    th:text="${category.name}">
+                                Выбрать категорию
+                            </option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-warning" style="width: 49%">Поиск</button>
+                    <a th:href="@{/product}" class="btn btn-warning" style="width: 49%">Найти все</a>
+                </fieldset>
+            </form>
+
+        </div>
+        <div class="col-sm-9">
+            <!--<div class="product-list" th:unless="${#lists.isEmpty(productsList)}">-->
+            <table class="table table-hover" id="products">
+                <thead>
+                <tr>
+                    <th th:text="Имя">Имя</th>
+                    <th th:text="Описание">Описание</th>
+                    <th th:text="Цена">Цена</th>
+                    <th th:text="Колво">Колво</th>
+                    <th th:text="Действие">Действие</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="prod : ${productsList}" th:href="@{/admin/product/{id}/edit(id=${prod.id})}">
+                    <td th:text="${prod.name}"></td>
+                    <td th:text="${prod.description}"></td>
+                    <td th:text="${prod.price}"></td>
+                    <td th:text="${prod.quantity}"></td>
+                    <td th:switch="${prod.quantity}">
+                        <button th:case="0" type="button" class="btn btn-sm btn-warning disabled"
+                                data-th-attr="data-product-id=${prod.productId}">Нет в наличии
+                        </button>
+                        <th:block th:case="*">
+                            <a th:if="${#authorization.expression('isAuthenticated()') && cart != null && cart.findProductById(prod.productId) != null}"
+                               class="btn btn-sm btn-warning" th:href="@{/order/begin}">В корзине</a>
+                            <button th:if="${#authorization.expression('!isAuthenticated()') || cart.findProductById(prod.productId) == null}" type="button"
+                                    class="btn btn-sm btn-warning product-button"
+                                    data-th-attr="data-url=@{/cart/add}, data-product-id=${prod.productId}">Купить
+                            </button>
+                        </th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!--</div>-->
+        </div>
+
+    </div>
+
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var serverContext = [[@{/}]];
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ready(function () {
+        $('.product-button').click(function (e) {
+            $this = $(this);
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: serverContext + 'cart/add',
+                data: {
+                    prodId: $(this).attr('data-product-id')
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (result) {
+                    $this.replaceWith('<a class="btn btn-sm btn-warning" href=' + serverContext + 'order/begin>В корзине</a>')
+                },
+                error: function (jqXHR) {
+                    var loginPage = jqXHR.getResponseHeader('LoginPage');
+                    if (loginPage && loginPage !== "") {
+                        window.location.replace(loginPage);
+                    }
+                }
+            });
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

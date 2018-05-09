@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Создать Категорию</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}"/>
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<form class="form-narrow form-horizontal" method="post" th:action="@{/admin/category/add}" th:object="${categoryForm}" th:fragment="categoryForm">
+    <th:block th:if="${#fields.hasErrors('${categoryForm.*}')}">
+        <div th:replace="fragments/components :: alert (type='danger', message='В форме есть ошибки.')">Alert</div>
+    </th:block>
+    <fieldset>
+        <legend>Новая категория</legend>
+        <th:block th:if="${message != null}">
+            <div th:replace="fragments/components :: alert (type=${#strings.toLowerCase(message.type)}, message=${message.message})">&nbsp;</div>
+        </th:block>
+        <div class="form-group" th:classappend="${#fields.hasErrors('name')}? 'has-error'">
+            <label for="name" class="col-lg-2 control-label">Категория</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="name" placeholder="Категория" th:field="*{name}" />
+                <span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Неверное название</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-warning">Создать</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+</body>
+</html>

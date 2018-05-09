@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список складов</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/base.css" rel="stylesheet" media="screen" th:href="@{/resources/css/base.css}"/>
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="product-list" th:unless="${#lists.isEmpty(warehouseList)}">
+        <h2 th:text="Склады">Склады</h2>
+        <table class="table table-hover" id="warehouses">
+            <thead>
+            <tr>
+                <th th:text="Код">Код</th>
+                <th th:text="Город">Город</th>
+                <th th:text="Адрес">Адрес</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="wareh : ${warehouseList}" th:href="@{/admin/warehouse/{id}(id=${wareh.id})}" style="cursor: pointer">
+                <td th:text="${wareh.id}"></td>
+                <td th:text="${wareh.city}"></td>
+                <th th:text="${wareh.address}"></th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script th:inline="javascript">
+    $("#warehouses tr").click(function () {
+        window.location = $(this).attr("href");
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Товары на складах</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/base.css" rel="stylesheet" media="screen" th:href="@{/resources/css/base.css}"/>
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="product-list" th:unless="${#lists.isEmpty(quantityWrapper.productQuantities)}">
+        <h2 th:text="${'Товар из ' + warehouse.city + ' ' + warehouse.address}">Товары</h2>
+        <th:block th:if="${#fields.hasErrors('${quantityWrapper.*}')}">
+            <div th:replace="fragments/components :: alert (type='danger', message='Ошибки.')">
+                Alert
+            </div>
+        </th:block>
+        <form action="#" th:action="@{/admin/warehouse/{id}(id=${warehouse.id})}" method="post" th:object="${quantityWrapper}">
+        <table class="table table-hover" id="products">
+            <thead>
+            <tr>
+                <th th:text="Код">Код</th>
+                <th th:text="Имя">Имя</th>
+                <th th:text="Описание">Описание</th>
+                <th th:text="колво">Колво</th>
+                <th th:text="Цена">Цена</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="prod,prodStat : ${quantityWrapper.productQuantities}" style="cursor: pointer">
+                <td th:text="${prod.productId}"></td>
+                <td th:text="${prod.name}"></td>
+                <td th:text="${prod.description}"></td>
+                <td><div th:classappend="${#fields.hasErrors('${quantityWrapper.productQuantities[__${prodStat.index}__].quantity}')}? 'has-error'">
+                    <input type="number" class="form-control" th:field="*{productQuantities[__${prodStat.index}__].quantity}">
+                    <input type="hidden" th:field="*{productQuantities[__${prodStat.index}__].id}">
+                    <input type="hidden" th:field="*{productQuantities[__${prodStat.index}__].name}">
+                    <input type="hidden" th:field="*{productQuantities[__${prodStat.index}__].description}">
+                    <input type="hidden" th:field="*{productQuantities[__${prodStat.index}__].productId}">
+                    <input type="hidden" th:field="*{productQuantities[__${prodStat.index}__].price}">
+
+                </div>
+                </td>
+                <td th:text="${prod.price}"></td>
+            </tr>
+            </tbody>
+        </table>
+            <button type="submit" class="btn btn-default">Сохранить</button>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

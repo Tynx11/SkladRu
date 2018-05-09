@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Новый товар</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}"/>
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+    <script src="../../../resources/js/jquery.autocomplete.min.js"
+            th:href="@{/resources/js/jquery.autocomplete.min.js}"></script>
+    <script src="../../../resources/js/bootstrap-multiselect.js"
+            th:src="@{/resources/js/bootstrap-multiselect.js}"></script>
+    <link href="../../../resources/css/bootstrap-multiselect.css" rel="stylesheet" type="text/css"
+          th:href="@{/resources/css/bootstrap-multiselect.css}"/>
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<form class="form-wide form-horizontal" method="post" th:action="@{/admin/product/add}" th:object="${productForm}"
+      th:fragment="productForm">
+    <th:block th:if="${#fields.hasErrors('${productForm.*}')}">
+        <div th:replace="fragments/components :: alert (type='danger', message='Форма содержит ошбики.')">
+            Alert
+        </div>
+    </th:block>
+    <fieldset>
+        <legend>Новый товар</legend>
+        <div class="form-group" th:classappend="${#fields.hasErrors('category')}? 'has-error'">
+            <label for="category" class="col-lg-2 control-label">Категория</label>
+            <div class="col-lg-10">
+                <select class="form-control" id="category" th:field="*{category}">
+                    <option th:each="category : ${allCategories}" th:value="${category.id}" th:text="${category.name}">
+                        Выбери категорию
+                    </option>
+                </select>
+                <span class="help-block" th:if="${#fields.hasErrors('category')}" th:errors="*{category}">Категория невалидная</span>
+            </div>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('name')}? 'has-error'">
+            <label for="name" class="col-lg-2 control-label">Название</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="name" placeholder="Название" th:field="*{name}"/>
+                <span class="help-block" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Имя невалидное</span>
+            </div>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('description')}? 'has-error'">
+            <label for="description" class="col-lg-2 control-label">Описание</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="description" placeholder="Описание"
+                       th:field="*{description}"/>
+                <span class="help-block" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Почта невалидная</span>
+            </div>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('price')}? 'has-error'">
+            <label for="price" class="col-lg-2 control-label">Цена</label>
+            <div class="col-lg-10">
+                <input type="number" class="form-control" id="price" placeholder="Price" th:field="*{price}" min="0"/>
+                <span class="help-block" th:if="${#fields.hasErrors('price')}"
+                      th:errors="*{price}">Цена невалидная</span>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-warning">Добавить</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+</body>
+
+</html>

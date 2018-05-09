@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Signup</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}"/>
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- Website CSS style -->
+    <link href="../../../resources/css/Register.css" rel="stylesheet" media="screen" th:href="@{/resources/css/Register.css}"/>
+
+    <!-- Website Font style -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="row main">
+        <div class="main-login main-center">
+            <form class="" method="post" th:action="@{/signup}" th:object="${signupForm}" th:fragment="signupForm">
+                <!--/* Show general error message when form contains errors */-->
+                <th:block th:if="${#fields.hasErrors('${signupForm.*}')}">
+                    <div th:replace="fragments/components :: alert (type='danger', message='В форме присутсвуют ошибки!')">
+                        Alert
+                    </div>
+                </th:block>
+                <fieldset>
+                    <legend>Регистрация</legend>
+
+                    <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'has-error'">
+
+                        <label for="email" class="col-lg-2 control-label"><i class="fa fa-envelope fa" aria-hidden="true"></i></label>
+                        <div class="col-lg-10">
+
+                            <input type="text" class="form-control" id="email" placeholder="Электронная почта"
+                                   th:field="*{email}"/>
+                            <span class="help-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Неправильная форма почты</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" th:classappend="${#fields.hasErrors('username')}? 'has-error'">
+                        <label for="username" class="col-lg-2 control-label"><i class="fa fa-user fa" aria-hidden="true"></i></label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="username" placeholder="Имя"
+                                   th:field="*{username}"/>
+                            <span class="help-block" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Невалидное имя</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'has-error'">
+                        <label for="password" class="col-lg-2 control-label"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></label>
+                        <div class="col-lg-10">
+                            <input type="password" class="form-control" id="password" placeholder="Пароль"
+                                   th:field="*{password}"/>
+                            <span class="help-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Невалидный пароль</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" th:classappend="${#fields.hasErrors('matchingPassword')}? 'has-error'">
+                        <label for="password" class="col-lg-2 control-label"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></label>
+                        <div class="col-lg-10">
+                            <input type="password" class="form-control" id="matchingPassword" placeholder="Подтверждение пароля"
+                                   th:field="*{matchingPassword}"/>
+                            <span class="help-block" th:if="${#fields.hasErrors('matchingPassword')}"
+                                  th:errors="*{matchingPassword}">Пароли не соответствуют</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-offset-2 col-lg-10">
+                            <button type="submit" class="btn btn-default">Зарегистрироваться</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-offset-2 col-lg-10">
+                            <p>Если у вас уже есть аккаун  <a href="signin" th:href="@{/signin}">  Войти</a></p>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список товаров на складе</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/base.css" rel="stylesheet" media="screen" th:href="@{/resources/css/base.css}"/>
+    <link href="../../../resources/css/Begin.css" rel="stylesheet" media="screen" th:href="@{/resources/css/Begin.css}"/>
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+    <link href="../../../resources/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/jquery.bootstrap-touchspin.min.css}"/>
+    <script src="../../../resources/js/jquery.bootstrap-touchspin.min.js"
+            th:src="@{/resources/js/jquery.bootstrap-touchspin.min.js}"></script>
+    <style>
+        .count-input .bootstrap-touchspin {
+            width: 120px;
+        }
+
+        .count-input .bootstrap-touchspin input {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+<div class="container">
+    <div class="product-list">
+        <h2 th:text="${'Корзинв'}">Корзина</h2>
+        <div class="productsTable" th:unless="${#lists.isEmpty(cart.productInOrders)}">
+        <table class="table" id="products" th:fragment="productsTable">
+            <thead>
+            <tr>
+
+                <th th:text="Описание">Описание</th>
+                <th th:text="Цена">Цена</th>
+                <th th:text="Колво">Колво</th>
+                <th th:text="Действие">Действие</th>
+                <div class="row margin-0 list-header hidden-sm hidden-xs">
+                    <div class="col-md-3"><div class="header"><th th:text="Название">Название</th></div></div>
+                    <div class="col-md-2"><div class="header">Тип</div></div>
+                    <div class="col-md-2"><div class="header">Обязателен</div></div>
+                    <div class="col-md-5"><div class="header">Описание</div></div>
+                </div>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="prod : ${cart.productInOrders}" th:id="${'row' + prod.product.id}">
+                <td th:text="${prod.product.name}"></td>
+                <td th:text="${prod.product.description}"></td>
+                <td th:text="${prod.getAmount()}"></td>
+
+                <td>
+                    <form method="post">
+                        <div class="count-input">
+                            <input th:name="count" type="text"
+                                   th:value="${prod.quantity}" data-th-attr="data-max-value=${prod.maxQuantity}" class="quantity-touchspin"/>
+                            <input type="hidden" th:name="productId" th:value="${prod.product.id}"/>
+                        </div>
+                    </form>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary product-button"
+                            data-th-attr="data-url=@{/cart/remove}, data-product-id=${prod.product.id}">Удалить с корзины
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+            <form th:action="@{/order/confirm}" method="post">
+                <button type="submit" class="btn btn-lg btn-success">Купить</button>
+            </form>
+        </div>
+        <h2 th:if="${cart.getQuantityTotal() == 0}">Ваша корзина пуста</h2>
+    </div>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var serverContext = [[@{/}]];
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ready(function () {
+        enableTouchspin();
+        disableEnter();
+        removeProduct();
+    });
+
+    function disableEnter() {
+        $('form').on('keyup keypress', function(e) {
+            var keyCode = e.keyCode || e.which;
+            if (keyCode === 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    }
+
+    function removeProduct() {
+        $('.product-button').click(function (e) {
+            $this = $(this);
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: serverContext + 'cart/remove',
+                data: {
+                    prodId: $(this).attr('data-product-id')
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (result) {
+                    $this.closest('tr').remove();
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+        });
+    }
+
+    function enableTouchspin() {
+        $.each($('.quantity-touchspin'), function () {
+            var maxCount = $(this).data("max-value");
+            $(this).TouchSpin({
+                min: 1,
+                max: maxCount,
+                step: 1
+            }).on('change', function () {
+                console.log("input changed");
+                var $form = $(this).closest('form');
+                $.ajax({
+                    type: "POST",
+                    url: serverContext + "order/checkout",
+                    data: $form.serialize(),
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (data) {
+                        var result = $('<div />').append(data).find('#products').html();
+                        $('#products').html(result);
+                        enableTouchspin();
+                        disableEnter();
+                        removeProduct();
+                    }
+                });
+            });
+        });
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

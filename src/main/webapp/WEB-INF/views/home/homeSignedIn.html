@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome to the Spring MVC Quickstart application! Get started quickly by signing up!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}" />
+    <link href="../../../resources/css/Home.css" rel="stylesheet" media="screen" th:href="@{/resources/css/Home.css}" />
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+
+
+<div class="row" >
+    <div class="container">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="http://placehold.it/1200x400/16a085/ffffff&text=О нас">
+                    <div class="carousel-caption">
+                        <h3>
+                            Headline</h3>
+                        <p>
+                            Фото о нас.</p>
+                    </div>
+                </div>
+                <!-- End Item -->
+                <div class="item">
+                    <img src="http://placehold.it/1200x400/e67e22/ffffff&text=Наши склады">
+                    <div class="carousel-caption">
+                        <h3>
+                            Headline</h3>
+                        <p>
+                            фото склада</p>
+                    </div>
+                </div>
+                <!-- End Item -->
+                <div class="item">
+                    <img src="http://placehold.it/1200x400/2980b9/ffffff&text=Наши достижения">
+                    <div class="carousel-caption">
+                        <h3>
+                            Headline</h3>
+                        <p>
+                            Фото достижений</p>
+                    </div>
+                </div>
+                <!-- End Item -->
+                <div class="item">
+                    <img src="http://placehold.it/1200x400/8e44ad/ffffff&text=Наш Сервис">
+                    <div class="carousel-caption">
+                        <h3>
+                            Headline</h3>
+                        <p>
+                            фото о нашей работе</p>
+                    </div>
+                </div>
+                <!-- End Item -->
+            </div>
+            <!-- End Carousel Inner -->
+            <ul class="nav nav-pills nav-justified">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"><a href="#">О нас<small>Более 150 складов по РФ</small></a></li>
+                <li data-target="#myCarousel" data-slide-to="1"><a href="#">Наши проекты<small>10 проектов различных складов</small></a></li>
+                <li data-target="#myCarousel" data-slide-to="2"><a href="#">Наши достижения<small>Более 10000 довльных клиетов</small></a></li>
+                <li data-target="#myCarousel" data-slide-to="3"><a href="#">Наш Сервис<small>Более 400 высококвалифицированных сотрудников</small></a></li>
+            </ul>
+        </div>
+        <!-- End Carousel -->
+    </div>
+</div>
+
+
+<div class="page-header">
+    <h1>Наши возможности</h1>
+</div>
+
+<div class="container">
+    <div class="row pricing">
+        <div class="col-md-6">
+            <div class="well">
+                <h3><b>Аренда складов.</b></h3>
+                <hr>
+                <p><b>Создайте свой склад и разместите товары</b></p>
+                <hr>
+                <p><b>Уже более 150 складов в РФ.</b></p>
+                <hr>
+                <p><b>Премиальное обслуживание</b></p>
+                <hr>
+                <p><b>Общительные консультанты</b></p>
+                <hr>
+                <p><b>Товары на любой вкус.и</b></p>
+                <hr>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="well">
+                <h3><b>Вам нужно все и сразу?</b></h3>
+                <hr>
+                <p><b>Создайте бесплатный аккаунт</b></p>
+                <hr>
+                <p><b>Арендуйте склад в любом городе РФ.</b></p>
+                <hr>
+                <p><b>Расскажите о себе.</b></p>
+                <hr>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script th:inline="javascript" type="text/javascript">
+    /* Fill in modal with content loaded with Ajax */
+    $(document).ready(function () {
+        $('#signup').on('click', function () {
+            $("#signup-modal").modal();
+            $("#signup-modal-body").text("");
+            $.ajax({
+                url: "signup",
+                cache: false
+            }).done(function (html) {
+                $("#signup-modal-body").append(html);
+            });
+        })
+    });
+</script>
+<!-- Signup modal -->
+<div th:replace="fragments/components :: modal(id='signup-modal', title='Signup')"></div>
+</body>
+</html>
